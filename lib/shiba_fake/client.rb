@@ -12,7 +12,7 @@ module ShibaFake
 
     def fake_data(model_name, fields, count = 1)
       case @config.ai_provider
-      when :open_ai
+      when :openai
         generate_with_openai(model_name, fields, count)
       end
     end
@@ -56,7 +56,7 @@ module ShibaFake
       end.join(", ")
 
       <<~PROMPT
-        Generate #{count} realistic fake #{model_name.downcase} records as JSON array.
+        Generate #{count} realistic fake #{model_name.to_s.downcase} records as JSON array.
         Fields: #{field_descriptions}
         
         Requirements:

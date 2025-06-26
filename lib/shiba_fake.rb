@@ -2,6 +2,7 @@
 
 require_relative "shiba_fake/version"
 require_relative "shiba_fake/client"
+require_relative "shiba_fake/data"
 
 module ShibaFake
   class Error < StandardError; end

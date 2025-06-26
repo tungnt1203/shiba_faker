@@ -21,13 +21,8 @@ module ShibaFake
 
     def generate_data_batch(model_name, fields, count)
       all_data = []
-
-      count.each do |batch|
-        puts "Generating batch #{batch + 1}, #{batch_count} records..."
-        batch_data = @ai_client.generate_data(model_name, fields, batch)
-        all_data << (batch_data)
-      end
-
+      batch_data = @ai_client.fake_data(model_name, fields, count)
+      all_data.concat(batch_data)
       all_data
     end
     def save_data(model_name, data)
