@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AgentFakeData do
+RSpec.describe ShibaFake do
   it "has a version number" do
     expect(AgentFakeData::VERSION).not_to be nil
   end

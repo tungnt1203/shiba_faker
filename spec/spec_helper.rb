@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "agent_fake_data"
+require "shiba_fake"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
