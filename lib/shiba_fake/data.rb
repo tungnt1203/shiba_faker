@@ -6,7 +6,7 @@ module ShibaFake
       @ai_client = Client.new
     end
 
-    def save(model_name, count = 10)
+    def fake_data_basic(model_name, count = 10)
       fields = extract_fields(model_name)
       data = generate_data_batch(model_name, fields, count)
       save_data(model_name, data)
