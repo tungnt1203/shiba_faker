@@ -1,0 +1,5 @@
+module ShibaFaker
+  class Client
+    @config: untyped
+  end
+end

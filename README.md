@@ -1,13 +1,15 @@
 # ShibaFaker
 
-ShibaFaker is a Ruby gem that generates realistic fake data for your ActiveRecord models using AI. It leverages OpenAI's GPT models to create contextually appropriate data for your database, making it perfect for development, testing, and demonstration purposes.
+ShibaFaker is a Ruby gem that generates realistic fake data for your ActiveRecord models using AI. It leverages AI models like OpenAI's GPT and Google's Gemini to create contextually appropriate data for your database, making it perfect for development, testing, and demonstration purposes.
 
 ## Features
 
 - Generate realistic fake data for any ActiveRecord model
 - Automatically respect model relationships and foreign key constraints
+- Smart schema analysis that understands validations, enums, and other constraints
 - Batch processing for efficient data creation
-- Configurable AI provider (currently supports OpenAI)
+- Configurable AI providers (currently supports OpenAI and Gemini)
+- Modular architecture for easy extension
 - Simple API for easy integration into existing projects
 
 ## Installation
@@ -36,10 +38,12 @@ Before using ShibaFaker, you need to configure it with your AI provider details:
 
 ```ruby
 ShibaFaker.configure do |config|
-  config.ai_provider = :openai  # Currently only OpenAI is supported
-  config.api_key = "your-openai-api-key"
-  config.model = "gpt-3.5-turbo"  # Default, can be changed to any OpenAI model
+  config.ai_provider = :openai  # :openai or :gemini
+  config.api_key = "your-api-key"
+  config.model = "gpt-3.5-turbo"  # For OpenAI; use appropriate model name for Gemini
   config.default_locale = :en  # Default language for generated content
+  config.use_validations = true  # Enable validation and constraint analysis
+  config.prompt_style = :enhanced  # Use enhanced prompts with validation information
 end
 ```
 
@@ -104,16 +108,101 @@ ShibaFaker::Data.new.fake_with_relations(Order, 100)
 
 This will generate 100 orders with valid user_id and product_id values, along with realistic quantities, prices, and order statuses.
 
+## Working with Model Constraints
+
+ShibaFaker can analyze and respect your model's validations, enums, and other constraints:
+
+### Validations
+
+```ruby
+class User < ApplicationRecord
+  validates :email, presence: true, format: { with: /\A[^@\s]+@[^@\s]+\z/ }
+  validates :age, numericality: { greater_than: 18, less_than: 100 }
+  validates :username, length: { minimum: 3, maximum: 20 }
+  validates :terms_accepted, acceptance: true
+end
+
+# ShibaFaker will generate users that meet these validation rules
+ShibaFaker::Data.new.fake(User, 10)
+```
+
+### Enums
+
+```ruby
+class Order < ApplicationRecord
+  enum status: { pending: 0, processing: 1, shipped: 2, delivered: 3, cancelled: 4 }
+  enum payment_method: { credit_card: 0, paypal: 1, bank_transfer: 2 }
+  
+  validates :status, presence: true
+end
+
+# ShibaFaker will only use valid enum values from the defined list
+ShibaFaker::Data.new.fake(Order, 10)
+```
+
+### Custom Constraints
+
+For more complex constraints, you might need to validate the data after generation:
+
+```ruby
+class Product < ApplicationRecord
+  validate :price_must_be_higher_than_cost
+  
+  private
+  
+  def price_must_be_higher_than_cost
+    if price.present? && cost.present? && price <= cost
+      errors.add(:price, "must be higher than cost")
+    end
+  end
+end
+
+# Generate and validate manually for complex constraints
+products = ShibaFaker::Data.new.fake(Product, 20)
+valid_products = products.select(&:valid?)
+```
+
+## Architecture
+
+ShibaFaker has a modular architecture:
+
+- **Configuration** - Manages global settings like AI provider, API keys, and models
+- **AI Providers** - Pluggable modules for different AI services (OpenAI, Gemini)
+- **Generators** - Strategies for generating data (simple or with relationships)
+- **Database** - Handles schema analysis and data persistence
+- **Schema** - Analyzes model validations, enums, and constraints
+
 ## How It Works
 
 ShibaFaker works by:
 
-1. Analyzing your ActiveRecord model's schema to determine field names and types
-2. Generating an appropriate prompt for the AI based on this schema
-3. Requesting realistic fake data from the AI provider
+1. Analyzing your ActiveRecord model's schema to determine field names, types, validations, and constraints
+2. Generating an appropriate prompt for the AI based on this schema analysis
+3. Requesting realistic fake data from the AI provider that respects all constraints
 4. Processing the response and inserting it into your database
 
-The AI is instructed to generate data that is contextually appropriate for each field type and name, ensuring that the data is as realistic as possible.
+The AI is instructed to generate data that is contextually appropriate for each field type and name, ensuring that the data is as realistic as possible and meets all validation requirements defined in your models.
+
+## Extending ShibaFaker
+
+You can extend ShibaFaker by:
+
+1. Adding new AI providers in the `ShibaFaker::AIProviders` namespace
+2. Creating custom generators in the `ShibaFaker::Generators` namespace
+3. Customizing database interactions through the `ShibaFaker::Database` module
+4. Enhancing schema analysis in the `ShibaFaker::Schema` module
+5. Creating custom prompt templates for specific types of data
+
+### Disabling Validation Analysis
+
+If you find that the validation analysis is slowing down data generation or you want to generate data that doesn't strictly follow validations, you can disable it:
+
+```ruby
+ShibaFaker.configure do |config|
+  config.use_validations = false  # Disable validation analysis
+  config.prompt_style = :simple   # Use simpler prompts
+end
+```
 
 ## Development
 

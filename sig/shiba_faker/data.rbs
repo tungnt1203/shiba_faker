@@ -1,0 +1,5 @@
+module ShibaFaker
+  class Data
+    @ai_client: untyped
+  end
+end
