@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "shiba_fake/version"
-require_relative "shiba_fake/client"
-require_relative "shiba_fake/data"
+require_relative "shiba_faker/version"
+require_relative "shiba_faker/client"
+require_relative "shiba_faker/data"
 
-module ShibaFake
+module ShibaFaker
   class Error < StandardError; end
-  
+
   class << self
     def configuration
       @configuration ||= Configuration.new
@@ -15,7 +15,6 @@ module ShibaFake
     def configure
       yield(configuration)
     end
-
   end
 
   class Configuration

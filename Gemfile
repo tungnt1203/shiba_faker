@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in shiba_fake.gemspec
+# Specify your gem's dependencies in shiba_faker.gemspec
 gemspec
 
 gem "irb"

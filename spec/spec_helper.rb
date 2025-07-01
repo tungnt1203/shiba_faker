@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "shiba_fake"
+require "shiba_faker"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

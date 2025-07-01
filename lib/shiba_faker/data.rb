@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ShibaFake
+module ShibaFaker
   class Data
     def initialize
       @ai_client = Client.new
@@ -42,12 +42,12 @@ module ShibaFake
       model_name.reflect_on_all_associations(:belongs_to).each do |association|
         fk = association.foreign_key
         related_model = association.klass
-        if related_model.exists?
-          fks[fk] = {
-            model: related_model,
-            association_name: association.name
-          }
-        end
+        next unless related_model.exists?
+
+        fks[fk] = {
+          model: related_model,
+          association_name: association.name
+        }
       end
       fks
     end
@@ -65,19 +65,19 @@ module ShibaFake
     end
 
     def generate_data_with_relations(model_name, fields, count, relation_data, foreign_keys)
-      ai_fields = fields.reject { |field_name, _| foreign_keys.key?(field_name) || foreign_keys.key?(field_name.to_sym) }
+      ai_fields = fields.reject do |field_name, _|
+        foreign_keys.key?(field_name) || foreign_keys.key?(field_name.to_sym)
+      end
 
-      puts "Generating AI data for fields: #{ai_fields.keys.join(', ')}"
-      puts "Foreign keys will be auto-assigned: #{foreign_keys.keys.join(', ')}"
+      puts "Generating AI data for fields: #{ai_fields.keys.join(", ")}"
+      puts "Foreign keys will be auto-assigned: #{foreign_keys.keys.join(", ")}"
 
       fake_data = @ai_client.fake_data(model_name, ai_fields, count)
 
       fake_data.map do |record|
         foreign_keys.each_key do |fk_column|
           available_ids = relation_data[fk_column]
-          if available_ids.any?
-            record[fk_column.to_s] = available_ids.sample
-          end
+          record[fk_column.to_s] = available_ids.sample if available_ids.any?
         end
         record
       end

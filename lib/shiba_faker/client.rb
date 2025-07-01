@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'httparty'
-require 'json'
+require "httparty"
+require "json"
 
-module ShibaFake
+module ShibaFaker
   class Client
     include HTTParty
     def initialize
-      @config = ShibaFake.configuration
+      @config = ShibaFaker.configuration
     end
 
     def fake_data(model_name, fields, count = 1)
@@ -23,10 +23,10 @@ module ShibaFake
       prompt = build_prompt(model_name, fields, count)
 
       response = self.class.post(
-        'https://api.openai.com/v1/chat/completions',
+        "https://api.openai.com/v1/chat/completions",
         headers: {
-          'Authorization' => "Bearer #{@config.api_key}",
-          'Content-Type' => 'application/json'
+          "Authorization" => "Bearer #{@config.api_key}",
+          "Content-Type" => "application/json"
         },
         body: {
           model: @config.model,
@@ -45,9 +45,8 @@ module ShibaFake
         }.to_json
       )
 
-      content = response.parsed_response.dig('choices', 0, 'message', 'content')
+      content = response.parsed_response.dig("choices", 0, "message", "content")
       JSON.parse(content)
-
     end
 
     def build_prompt(model_name, fields, count)
@@ -58,13 +57,13 @@ module ShibaFake
       <<~PROMPT
         Generate #{count} realistic fake #{model_name.to_s.downcase} records as JSON array.
         Fields: #{field_descriptions}
-        
+
         Requirements:
         - Return only valid JSON array
         - Make data realistic and diverse
         - Use appropriate data types
         - Ensure data consistency
-        
+
         Example format:
         [
           {
