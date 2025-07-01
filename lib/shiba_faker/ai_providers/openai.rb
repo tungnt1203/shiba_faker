@@ -35,9 +35,7 @@ module ShibaFaker
           }.to_json
         )
 
-        if response.nil? || !response.parsed_response.is_a?(Hash)
-          raise Error, "Invalid response from OpenAI API: #{response.inspect}"
-        end
+        raise Error, "Invalid response from OpenAI API: #{response.inspect}" if response.body.nil?
 
         if response.parsed_response["error"]
           error_message = response.parsed_response.dig("error", "message") || "Unknown OpenAI API error"
@@ -46,9 +44,7 @@ module ShibaFaker
 
         content = response.parsed_response.dig("choices", 0, "message", "content")
 
-        if content.nil?
-          raise Error, "No content returned from OpenAI API"
-        end
+        raise Error, "No content returned from OpenAI API" if content.nil?
 
         cleaned_content = clean_json_boundary(content)
         begin
