@@ -106,6 +106,7 @@ GEM
       prism (~> 1.4)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    sqlite3 (2.7.1-x86_64-darwin)
     stringio (3.1.7)
     timeout (0.4.3)
     tzinfo (2.0.6)
@@ -116,7 +117,6 @@ GEM
     uri (1.0.3)
 
 PLATFORMS
-  ruby
   x86_64-darwin-22
 
 DEPENDENCIES
@@ -125,6 +125,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   shiba_faker!
+  sqlite3 (~> 2.7, >= 2.7.1)
 
 BUNDLED WITH
    2.6.9

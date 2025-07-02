@@ -5,7 +5,6 @@ module ShibaFaker
     class RelationsGenerator < BaseGenerator
       def generate(model_name, count = 10)
         foreign_keys = @database_manager.detect_foreign_keys(model_name)
-
         if foreign_keys.empty?
           # If no foreign keys found, fall back to simple generation
           return SimpleGenerator.new(@config).generate(model_name, count)
@@ -25,7 +24,6 @@ module ShibaFaker
 
         # Add the foreign key values
         complete_data = add_foreign_keys(fake_data, foreign_keys, relation_data)
-
         # Save to database
         @database_manager.save_data(model_name, complete_data)
 

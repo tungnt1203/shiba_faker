@@ -76,7 +76,12 @@ module ShibaFaker
       def save_data(model_name, data)
         model_name.transaction do
           data.each_slice(100) do |batch|
-            model_name.insert_all(batch)
+            batch.each do |attrs|
+              record = model_name.new
+              permitted = attrs.slice(*model_name.column_names)
+              record.assign_attributes(permitted)
+              record.save!
+            end
           end
         end
       end
@@ -164,7 +169,6 @@ module ShibaFaker
 
           field_descriptions << description
         end
-
         <<~PROMPT
           Generate #{count} realistic fake #{model_name.to_s.downcase} records as JSON array.
           Fields with constraints:

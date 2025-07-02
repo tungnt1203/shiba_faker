@@ -58,6 +58,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rubocop-ast (v1.45.1, asdf: 3.2.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.13.0, asdf: 3.2.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="securerandom (v0.4.1, asdf: 3.2.0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sqlite3 (v2.7.1, asdf: 3.2.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stringio (v3.1.7, asdf: 3.2.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="timeout (v0.4.3, asdf: 3.2.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="tzinfo (v2.0.6, asdf: 3.2.0) [gem]" level="application" />

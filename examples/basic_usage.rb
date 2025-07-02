@@ -110,22 +110,4 @@ Order.includes(:user, order_items: :product).limit(2).each do |order|
   puts ""
 end
 
-# Example 3: Custom Field Handling
-puts "\nAdvanced Example: Custom data mapping"
-puts "This would normally be handled by the AI, but for demonstration purposes:"
-
-# You can also work with the raw data before inserting it
-fields = { "name" => "string", "specialty" => "string", "years_experience" => "integer" }
-custom_data = [
-  { "name" => "Dr. Smith", "specialty" => "Cardiology", "years_experience" => 15 },
-  { "name" => "Dr. Jones", "specialty" => "Neurology", "years_experience" => 8 },
-  { "name" => "Dr. Brown", "specialty" => "Pediatrics", "years_experience" => 20 }
-]
-
-puts "In a real application, this data would come from the AI based on your model's schema."
-puts "Custom data example:"
-custom_data.each do |doctor|
-  puts "  - #{doctor['name']}, #{doctor['specialty']}, #{doctor['years_experience']} years of experience"
-end
-
 puts "\nShibaFaker provides a powerful way to generate realistic test data for your Rails applications!"
